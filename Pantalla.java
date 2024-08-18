@@ -4,8 +4,8 @@
  */
 package com.mycompany.calculadora;
 
-import java.awt.List;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -31,17 +31,9 @@ public class Pantalla extends javax.swing.JFrame {
     public Pantalla() {
         initComponents();
         this.setLocationRelativeTo(null);
-        campoHistorial = new JTextArea();
-        campoHistorial.setEditable(false); // Hacer que el área de texto sea solo de lectura
-        campoHistorial.setRows(10); // Ajustar el número de filas visibles
-        campoHistorial.setColumns(30); // Ajustar el número de columnas visibles
-
-        // Agregar el JTextArea a un JScrollPane
-        scrollPaneHistorial = new JScrollPane(campoHistorial);
-        scrollPaneHistorial.setBounds(30, 400, 240, 100); // Ajusta la posición y tamaño del JScrollPane
-
-        // Agregar el JScrollPane al formulario
-        getContentPane().add(scrollPaneHistorial);
+        setTitle("calculadora");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
     }
     
 
@@ -114,6 +106,11 @@ public class Pantalla extends javax.swing.JFrame {
         btnPorcentaje.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         btnPorcentaje.setForeground(new java.awt.Color(255, 255, 255));
         btnPorcentaje.setText("%");
+        btnPorcentaje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPorcentajeActionPerformed(evt);
+            }
+        });
 
         btnDivision.setBackground(new java.awt.Color(255, 153, 0));
         btnDivision.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
@@ -360,11 +357,12 @@ public class Pantalla extends javax.swing.JFrame {
                     .addComponent(btn6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnResta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(11, 11, 11)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                    .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSuma, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btn2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSuma, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn0, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
@@ -509,15 +507,34 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPuntoActionPerformed
 
     private void btnHisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHisActionPerformed
-        // TODO add your handling code here:
-        StringBuilder sb = new StringBuilder();
-    for (String operacion : historial) {
-        sb.append(operacion).append("\n");
-    }
-        txtpantalla.setText(sb.toString());
-    }      
+        // TODO add your handling code here:    
+        actualizarHistorial();
     }//GEN-LAST:event_btnHisActionPerformed
-   
+
+    private void btnPorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPorcentajeActionPerformed
+        // TODO add your handling code here:
+        segundonumero = Double.parseDouble(txtpantalla.getText());
+        
+        if(primernumero != 0){
+            resultado = (segundonumero / primernumero) * 100;
+            txtpantalla.setText(Double.toString(resultado) + "%");
+        }else{
+            txtpantalla.setText("error");
+        }
+        txtpantalla.setText(Double.toString(resultado));
+        String operacion = primernumero + " " + operador + " " + segundonumero + " = " + resultado;
+        historial.add(operacion);
+    }//GEN-LAST:event_btnPorcentajeActionPerformed
+    private void actualizarHistorial(){
+        StringBuilder historialT = new StringBuilder();
+        for(String item : historial){
+            historialT.append(item).append(" | ");
+    }
+        
+        txtpantalla.setText(historialT.toString());
+        txtpantalla.setCaretPosition(txtpantalla.getText().length());
+    
+    }
     
     /**
      * @param args the command line arguments
